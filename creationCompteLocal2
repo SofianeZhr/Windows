@@ -1,0 +1,26 @@
+# Script de parcours d'un fichier texte
+# Contenu du fichier : nomCompte/nomComplet/Description
+# Affiche le nom de compte
+
+$fichier="C:\testPowerShell\listeCompte.txt" # à changer si le nom de fichier est différent !
+$local=[ADSI]"WinNT://."
+$compte=[ADSI]"WinNT://./$nom"
+
+if (Test-Path $fichier){
+    $colLignes=Get-Content $fichier
+
+    foreach($ligne in $colLignes){
+        $tabCompte=$ligne.Split("/")
+        if (!$compte.path){
+            $utilisateur=$local.create("user",$tabCompte[0])
+            $utilisateur.InvokeSet("Description",$tabCompte[2])
+            $utilisateur.InvokeSet("FullName",$tabCompte[1])
+            $utilisateur.CommitChanges()
+            Write-Host "Comptes ajoutés"
+        }
+        else{
+            Write-Host "Un compte existe déjà"
+        }
+
+    }
+}
